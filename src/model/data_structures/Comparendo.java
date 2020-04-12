@@ -19,8 +19,6 @@ public class Comparendo implements Comparable<Comparendo>
 
 	private int comparacion;
 	
-	private Haversine distanciador;
-
 
 
 	public Comparendo(int objeId, Date fecha, String descripcion, String detencion, String claseVeh, String tipoSer, String codInfraccion, String localidadP, double lonP, double latP)
@@ -37,7 +35,6 @@ public class Comparendo implements Comparable<Comparendo>
 		latitud = latP;
 
 		comparacion =0;
-		distanciador = new Haversine();
 	}
 
 	public String darLocalidad()
@@ -127,10 +124,7 @@ public class Comparendo implements Comparable<Comparendo>
 		return "[OBJECTID: " + objectId+ ", TIPO_SERVI: " + tipo_servi+", INFRACCION: "+ infraccion+", FECHA_HORA,: " + fecha_hora + ", CLASE_VEHI: "+ clase_vehi + "]";
 	}
 	
-	public String darInformacion1B()
-	{
-		return "[OBJECTID: " + objectId+ ", TIPO_SERVI: " + tipo_servi+", INFRACCION: "+ infraccion+", FECHA_HORA,: " + fecha_hora + ", CLASE_VEHI: "+ clase_vehi +", LATITUD: " + latitud + ", LONGITUD: "+longitud+" - "+distanciador.distance(4.647586, -74.078122, this.darLatitud(), this.darLongitud())+"]";
-	}
+	
 
 	public String darInformacion2B()
 	{
@@ -213,18 +207,7 @@ public class Comparendo implements Comparable<Comparendo>
 		}
 		else if(comparacion == 2)
 		{
-			if(distanciador.distance(4.647586, -74.078122, this.darLatitud(), this.darLongitud())<distanciador.distance(4.647586, -74.078122, arg.darLatitud(), arg.darLongitud()))
-			{
-				valor = 1;
-			}
-			else if(distanciador.distance(4.647586, -74.078122, this.darLatitud(), this.darLongitud())>distanciador.distance(4.647586, -74.078122, arg.darLatitud(), arg.darLongitud()))
-			{
-				valor = -1;
-			}
-			else if(distanciador.distance(4.647586, -74.078122, this.darLatitud(), this.darLongitud()) == distanciador.distance(4.647586, -74.078122, arg.darLatitud(), arg.darLongitud()))
-			{
-				valor = 0;
-			}
+			
 		}
 
 		return valor;

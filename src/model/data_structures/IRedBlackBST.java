@@ -4,7 +4,7 @@ public interface IRedBlackBST<K,V> extends Iterable<K>
 {
 	public int size();
 
-	public boolean isEmpty ();
+	public boolean isEmpty();
 
 	public V get(K key);
 

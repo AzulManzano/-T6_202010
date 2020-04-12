@@ -26,16 +26,10 @@ public class View
 	{
 		System.out.println("MENU DEL USUARIO");
 		System.out.println("1. Cargar datos");
-		System.out.println("2.  (1A) Obtener los M comparendos con mayor gravedad.");
-		System.out.println("3.  (2A) Buscar los comparendos por mes y día de la semana.");
-		System.out.println("4.  (3A) Buscar los comparendos que tienen una fecha-hora en un rango y que son de una localidad dada.");
-		System.out.println("5.  (1B) Buscar los M comparendos más cercanos a la estación de policía.");
-		System.out.println("6.  (2B) Buscar los comparendos por medio de detección, clase de vehículo, tipo de servicio y localidad. ");
-		System.out.println("7.  (3B) Buscar los comparendos que tienen una latitud en un rango dado y que involucraron un tipo de vehículo particular.");
-		System.out.println("8.  (1C) Visualizar Datos en una Tabla ASCII");
-		System.out.println("9.  (2C) El costo de los tiempos de espera hoy en día (cola)");
-		System.out.println("10. (3C) El costo de los tiempos de espera usando el nuevo sistema");
-		System.out.println("11. SALIR");
+		System.out.println("2. Consultar un comparendo por id");
+		System.out.println("3. Consultar los comparendos con un id en un rango específico");
+		System.out.println("4. Análisis");
+		System.out.println("5. SALIR");
 		System.out.println("Dar el numero de opcion a resolver, luego oprimir tecla Return: (e.g., 1):");
 	}
 

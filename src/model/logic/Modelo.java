@@ -15,15 +15,8 @@ import com.google.gson.stream.JsonReader;
 
 import model.data_structures.RedBlackBST;
 import model.data_structures.Comparendo;
-import model.data_structures.LLaves2A;
-import model.data_structures.LLaves2B;
-import model.data_structures.LinearProbing;
-import model.data_structures.MaxHeapCP;
 import model.data_structures.Nodo;
 import model.data_structures.Queue;
-import model.data_structures.SeparateChaining;
-import model.data_structures.SequentialSearch;
-
 /**
  * Definicion del modelo del mundo
  *
@@ -36,20 +29,21 @@ public class Modelo
 
 	public static String PATH = "./data/Comparendos_DEI_2018_Bogotá_D.C_50000_.geojson";
 	// PORFAVOR LEER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	private MaxHeapCP<Comparendo> listaCarga;
+
+	private RedBlackBST<Integer,Comparendo> arbol;
 
 
 	public Modelo()
 	{
-		listaCarga = new MaxHeapCP<Comparendo>();
+		arbol = new  RedBlackBST<Integer,Comparendo>();
 	}
 
 
 	// Retorno de estructuras -----------------------
 
-	public MaxHeapCP<Comparendo> darListaDeCarga()
+	public  RedBlackBST<Integer,Comparendo> darArbol()
 	{
-		return listaCarga;
+		return arbol;
 	}
 	//---------------------------------------------
 
@@ -58,7 +52,7 @@ public class Modelo
 
 	public int darTotalComparendos()
 	{
-		return listaCarga.darNumElementos();
+		return arbol.size();
 	}
 
 	//---------------------------------------------------
@@ -97,7 +91,7 @@ public class Modelo
 
 				Comparendo c = new Comparendo(OBJECTID, FECHA_HORA, DES_INFRAC, MEDIO_DETE, CLASE_VEHI, TIPO_SERVI, INFRACCION, LOCALIDAD, longitud, latitud);
 
-				listaCarga.agregar(c);
+				arbol.put(OBJECTID, c);
 			}
 
 		} catch (FileNotFoundException | ParseException e) {
@@ -107,171 +101,45 @@ public class Modelo
 
 	}
 
-	public MaxHeapCP<Comparendo> requerimiento1A()
+	public Comparendo darMinimo()
 	{
-		MaxHeapCP<Comparendo> elementos = clonar();
-		int num = elementos.darNumElementos();
-		MaxHeapCP<Comparendo> elementosFinales = new MaxHeapCP<Comparendo>();
+		return arbol.get(arbol.min());
+	}
 
-		for(int i = 0; i<num;i++)
+	public Comparendo darMaximo()
+	{
+		return arbol.get(arbol.max());
+	}
+
+	public Comparendo requerimiento2(int pId)
+	{
+		return arbol.get(pId);
+	}
+
+	public Queue<Comparendo> requerimiento3(int valorInf, int valorSup)
+	{
+		return arbol.valuesInRange(valorInf, valorSup);
+	}
+
+	public int darAltura()
+	{
+		return arbol.height();
+	}
+
+	public double promediHojas()
+	{
+		Queue<Integer> cola = arbol.darHojas();
+		double promedio = 0;
+		int tam = cola.getSize();
+
+		for(int i = 0; i<tam; i++)
 		{
-			Comparendo este = elementos.sacarMax();
-			este.cambiarComparacion(1);
-
-
-			elementosFinales.agregar(este);
+			Integer cosa = cola.dequeue();
+			promedio = promedio + arbol.getHeight(cosa);
 		}
-		return elementosFinales;
-	}
+		promedio = promedio/tam;
 
-	public MaxHeapCP<Comparendo> requerimiento2A(Integer pMes, Integer pDia)
-	{
-		LLaves2A llave = new LLaves2A(pMes,pDia);
-		SeparateChaining<LLaves2A,MaxHeapCP<Comparendo>> estructura = new SeparateChaining<LLaves2A,MaxHeapCP<Comparendo>>();
-		MaxHeapCP<Comparendo> respuesta = new MaxHeapCP<Comparendo>();
-		MaxHeapCP<Comparendo> trabajable = clonar();
-
-		int corredor = trabajable.darNumElementos();
-
-		for(int i = 0; i <corredor;i++)
-		{
-			Comparendo actual = trabajable.sacarMax();
-			actual.cambiarComparacion(0);
-
-			Integer diaIndicado = actual.darFecha().getDay();
-			Integer mesIndicado = actual.darFecha().getMonth();
-			LLaves2A llaveq = new LLaves2A(mesIndicado,diaIndicado);
-
-
-			MaxHeapCP<Comparendo> agregada = new MaxHeapCP<Comparendo>();
-			if(estructura.get(llaveq) == null)
-			{
-				agregada.agregar(actual);
-			}
-			else
-			{
-				MaxHeapCP<Comparendo> estano = estructura.delete(llaveq);
-				estano.agregar(actual);
-				agregada = estano;
-			}
-
-
-			estructura.put(llaveq, agregada);
-		}
-
-		respuesta = estructura.get(llave);
-
-		return respuesta;
-	}
-	
-	public MaxHeapCP<Comparendo> requerimiento3A(String pFechaInicio,String pFechaFinal, String pLocalidad)
-	{
-		MaxHeapCP<Comparendo> respuesta = new MaxHeapCP<Comparendo>();
-		
-		return respuesta;
-	}
-
-	public MaxHeapCP<Comparendo> requerimiento1B()
-	{
-		MaxHeapCP<Comparendo> elementos = clonar();
-		int num = elementos.darNumElementos();
-		MaxHeapCP<Comparendo> elementosFinales = new MaxHeapCP<Comparendo>();
-
-		for(int i = 0; i<num;i++)
-		{
-			Comparendo este = elementos.sacarMax();
-			este.cambiarComparacion(2);
-
-
-			elementosFinales.agregar(este);
-		}
-
-		return elementosFinales;
-	}
-
-	public MaxHeapCP<Comparendo> requerimiento2B(String pmedio_dete,String pclase_vehi, String ptipo_servi,String plocalidad)
-	{
-		LLaves2B llave = new LLaves2B(pmedio_dete,pclase_vehi,ptipo_servi,plocalidad);
-		SeparateChaining<LLaves2B,MaxHeapCP<Comparendo>> estructura = new SeparateChaining<LLaves2B,MaxHeapCP<Comparendo>>();
-		MaxHeapCP<Comparendo> respuesta = new MaxHeapCP<Comparendo>();
-		MaxHeapCP<Comparendo> trabajable = clonar();
-
-		int corredor = trabajable.darNumElementos();
-
-		for(int i = 0; i <corredor;i++)
-		{
-			Comparendo actual = trabajable.sacarMax();
-			actual.cambiarComparacion(0);
-
-			LLaves2B llaveq = new LLaves2B(actual.darMedioDeteccion(),actual.darClaseVeiculo(),actual.darTipoServicio(),actual.darLocalidad());
-
-
-			MaxHeapCP<Comparendo> agregada = new MaxHeapCP<Comparendo>();
-			if(estructura.get(llaveq) == null)
-			{
-				agregada.agregar(actual);
-			}
-			else
-			{
-				MaxHeapCP<Comparendo> estano = estructura.delete(llaveq);
-				estano.agregar(actual);
-				agregada = estano;
-			}
-
-
-			estructura.put(llaveq, agregada);
-		}
-
-		respuesta = estructura.get(llave);
-
-		return respuesta;
-	}
-	
-	public MaxHeapCP<Comparendo> requerimiento3B(String pLatitudInicial,String pLatitudFinal, String pTipoVeiculo)
-	{
-		MaxHeapCP<Comparendo> respuesta = new MaxHeapCP<Comparendo>();
-		
-		return respuesta;
-	}
-	
-	public SeparateChaining<Date,MaxHeapCP<Comparendo>> requerimiento1C(int rango)
-	{
-		SeparateChaining<Date,MaxHeapCP<Comparendo>> estructura = new SeparateChaining<Date,MaxHeapCP<Comparendo>>();
-		
-		return estructura;
-	}
-	
-	public RedBlackBST<Date,MaxHeapCP<Comparendo>> requerimiento2C()
-	{
-		RedBlackBST<Date,MaxHeapCP<Comparendo>> estructura = new RedBlackBST<Date,MaxHeapCP<Comparendo>>();
-		
-		return estructura;
-	}
-	
-	public RedBlackBST<Date,MaxHeapCP<Comparendo>> requerimiento3C()
-	{
-		RedBlackBST<Date,MaxHeapCP<Comparendo>> estructura = new RedBlackBST<Date,MaxHeapCP<Comparendo>>();
-		
-		return estructura;
-	}
-	
-
-	public MaxHeapCP<Comparendo> clonar()
-	{
-		MaxHeapCP<Comparendo> nueva =  new MaxHeapCP<Comparendo>();
-		MaxHeapCP<Comparendo> vieja =  new MaxHeapCP<Comparendo>();
-		int cor = listaCarga.darNumElementos();
-
-		for(int i = 0; i<cor;i++)
-		{
-			Comparendo agre = listaCarga.sacarMax();
-			nueva.agregar(agre);
-			vieja.agregar(agre);
-		}
-
-		listaCarga = vieja;
-
-		return nueva;			
+		return promedio;
 	}
 
 	public String indicarMes(int inicial)
@@ -377,7 +245,7 @@ public class Modelo
 
 		return listica;
 	}
-	
+
 	public String tranformarMedioDeteccion(String lista)
 	{
 		String listica = "";
@@ -390,11 +258,11 @@ public class Modelo
 		{
 			listica = "DEAP";
 		}
-		
+
 
 		return listica;
 	}
-	
+
 	public String tranformarTipoServicio(String lista)
 	{
 		String listica = "";
@@ -411,11 +279,11 @@ public class Modelo
 		{
 			listica = "Particular";
 		}
-		
+
 
 		return listica;
 	}
-	
+
 	public String transformarLocalidad(String lista)
 	{
 		String listica = "";
